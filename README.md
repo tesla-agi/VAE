@@ -131,6 +131,17 @@ This VAE is the perception front-end of a much larger build:
 - **VQ-VAE** — replace the continuous Gaussian latent with a discrete codebook. Same encode→quantize→decode skeleton, but quantization is non-differentiable, so gradients go through the **straight-through estimator** — the same trick that powers categorical latents in DreamerV2.
 - **DreamerV2 → IRIS** — IRIS is essentially DreamerV2 with the recurrent dynamics replaced by an autoregressive Transformer over VQ-VAE tokens. VQ-VAE is the missing piece between Dreamer-style RL and IRIS-style RL.
 
+## Dataset
+
+**CelebA** — Large-scale CelebFaces Attributes Dataset, ~200K celebrity face images at 178×218, with 40 attribute annotations per image. Released by the Multimedia Lab at the Chinese University of Hong Kong.
+
+- Official page: https://mmlab.ie.cuhk.edu.hk/projects/CelebA.html
+- Kaggle mirror (recommended — the official Google Drive download regularly hits a quota error): https://www.kaggle.com/datasets/jessicali9530/celeba-dataset
+
+Non-commercial research use only. If you use this dataset, cite the original paper:
+
+> Liu, Z., Luo, P., Wang, X., & Tang, X. (2015). *Deep Learning Face Attributes in the Wild.* In Proceedings of the International Conference on Computer Vision (ICCV).
+
 ## References
 
 - Kingma & Welling, *Auto-Encoding Variational Bayes*, ICLR 2014 — the original VAE paper.
