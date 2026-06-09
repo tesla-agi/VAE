@@ -1,0 +1,8 @@
+celeba_root/
+data/
+checkpoint/
+viz/
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
