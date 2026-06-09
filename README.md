@@ -1,5 +1,7 @@
 # Convolutional VAE on CelebA
 
+![Faces sampled from the prior — none of these people exist](assets/prior_samples.png)
+
 A from-scratch PyTorch implementation of a vanilla Variational Autoencoder for 64×64 RGB faces, built as a foundational component on the road to world models (VQ-VAE → DreamerV2 → IRIS).
 
 The architecture maps directly onto the math:
@@ -45,6 +47,7 @@ Both terms are **per-example sums** then batch-averaged. Mixing reductions (e.g.
 ├── visualize.py      # reconstructions, prior samples, latent interpolation
 ├── checkpoint/       # vae.pth (created by training)
 ├── viz/              # output PNGs (created by visualize.py)
+├── assets/           # images embedded in this README
 └── celeba_root/
     └── img_align_celeba/   # ~200k CelebA jpgs
 ```
@@ -96,9 +99,15 @@ Produces three PNGs in `./viz/`, each one testing a different theoretical claim:
 
 **`reconstructions.png`** — top row originals, bottom row their reconstructions through `encode → reparameterize → decode`. Identity should be preserved (same person, same pose); fine detail will be softer. The softness isn't a bug — it's the inevitable consequence of the 32-D bottleneck plus the Bernoulli likelihood (independent-pixel assumption with no sharpness term) plus the KL pulling latents toward N(0, I). This is the well-known VAE-vs-GAN tradeoff: blurrier outputs in exchange for a principled, samplable latent space.
 
+![Reconstructions — top row originals, bottom row reconstructions](assets/reconstructions.png)
+
 **`prior_samples.png`** — 64 fresh `z ~ N(0, I)` decoded into faces. None of those people exist. The fact that random latent noise decodes to *recognizably face-shaped images* is the entire VAE thesis: the latent space is continuous and samplable. A plain autoencoder fails this test — random `z` lands in the holes between training codes and produces garbage. Yours doesn't, because the KL-to-prior term in the loss spent training pushing every `q(z|x)` toward `N(0, I)`. The smudgy samples are where the prior sampled a low-density region of the aggregate posterior — a real (and well-known) limitation of vanilla VAEs and one of the motivations for VQ-VAE's discrete prior.
 
+![64 faces decoded from z ~ N(0, I) — none of these people exist](assets/prior_samples.png)
+
 **`interpolation.png`** — encode two real faces to `μ₀`, `μ₁`, decode `z = (1−α)μ₀ + αμ₁` for `α ∈ [0, 1]` in 10 steps. A smooth morph (hair, pose, expression drifting gradually) means the straight line between two encoded points stays inside the "this means face" region the whole way — i.e. the latent space is *continuous*, not holey.
+
+![Latent interpolation between two encoded faces — smoothness proves the space is continuous](assets/interpolation.png)
 
 ## Implementation notes
 
