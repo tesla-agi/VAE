@@ -1,6 +1,7 @@
 # Convolutional VAE on CelebA
 
-![Faces sampled from the prior — none of these people exist](assets/prior_samples.png)
+<img width="530" height="530" alt="celeba_sample" src="https://github.com/user-attachments/assets/8ba7c9a7-b7f3-4cd0-a243-a9fd68eade3d" />
+
 
 A from-scratch PyTorch implementation of a vanilla Variational Autoencoder for 64×64 RGB faces, built as a foundational component on the road to world models (VQ-VAE → DreamerV2 → IRIS).
 
