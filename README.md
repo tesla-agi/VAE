@@ -99,15 +99,18 @@ Produces three PNGs in `./viz/`, each one testing a different theoretical claim:
 
 **`reconstructions.png`** — top row originals, bottom row their reconstructions through `encode → reparameterize → decode`. Identity should be preserved (same person, same pose); fine detail will be softer. The softness isn't a bug — it's the inevitable consequence of the 32-D bottleneck plus the Bernoulli likelihood (independent-pixel assumption with no sharpness term) plus the KL pulling latents toward N(0, I). This is the well-known VAE-vs-GAN tradeoff: blurrier outputs in exchange for a principled, samplable latent space.
 
-![Reconstructions — top row originals, bottom row reconstructions](assets/reconstructions.png)
+<img width="530" height="134" alt="reconstructions" src="https://github.com/user-attachments/assets/3a2e2bd3-b379-4476-9667-ffb005f2f997" />
+
 
 **`prior_samples.png`** — 64 fresh `z ~ N(0, I)` decoded into faces. None of those people exist. The fact that random latent noise decodes to *recognizably face-shaped images* is the entire VAE thesis: the latent space is continuous and samplable. A plain autoencoder fails this test — random `z` lands in the holes between training codes and produces garbage. Yours doesn't, because the KL-to-prior term in the loss spent training pushing every `q(z|x)` toward `N(0, I)`. The smudgy samples are where the prior sampled a low-density region of the aggregate posterior — a real (and well-known) limitation of vanilla VAEs and one of the motivations for VQ-VAE's discrete prior.
 
-![64 faces decoded from z ~ N(0, I) — none of these people exist](assets/prior_samples.png)
+<img width="530" height="530" alt="prior_samples" src="https://github.com/user-attachments/assets/7fa36e84-38bf-4ecb-8bde-48e20926eb0b" />
+
 
 **`interpolation.png`** — encode two real faces to `μ₀`, `μ₁`, decode `z = (1−α)μ₀ + αμ₁` for `α ∈ [0, 1]` in 10 steps. A smooth morph (hair, pose, expression drifting gradually) means the straight line between two encoded points stays inside the "this means face" region the whole way — i.e. the latent space is *continuous*, not holey.
 
-![Latent interpolation between two encoded faces — smoothness proves the space is continuous](assets/interpolation.png)
+<img width="662" height="68" alt="interpolation" src="https://github.com/user-attachments/assets/63b6e040-af06-4616-ac65-f4513d847b17" />
+
 
 ## Implementation notes
 
